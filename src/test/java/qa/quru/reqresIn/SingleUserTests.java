@@ -1,4 +1,4 @@
-package quru.qa.reqresIn;
+package qa.quru.reqresIn;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,8 +1,8 @@
-package quru.qa.reqresIn;
+package qa.quru.reqresIn;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import domain.Registration;
+import qa.quru.domain.Registration;
 
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.hasKey;

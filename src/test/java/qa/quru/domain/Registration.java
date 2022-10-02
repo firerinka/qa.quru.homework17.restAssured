@@ -1,4 +1,4 @@
-package domain;
+package qa.quru.domain;
 
 public class Registration {
     private String email;
