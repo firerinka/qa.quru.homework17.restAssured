@@ -1,7 +1,5 @@
 package qa.quru.reqresIn;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import qa.quru.domain.Registration;
 
 import static io.restassured.http.ContentType.JSON;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
 
 public class RegistrationTests {
-    ObjectMapper mapper = new ObjectMapper();
     String baseUrl = "https://reqres.in/api/register";
 
     @Test
@@ -23,11 +20,9 @@ public class RegistrationTests {
                 .setEmail("eve.holt@reqres.in")
                 .setPassword("123");
 
-        JsonNode node = mapper.valueToTree(registration);
-
         given()
                 .contentType(JSON)
-                .body(node.toString())
+                .body(registration)
                 .log().body()
                 .when()
                 .post(baseUrl)
@@ -45,11 +40,9 @@ public class RegistrationTests {
         registration
                 .setEmail("eve.holt@reqres.in");
 
-        JsonNode node = mapper.valueToTree(registration);
-
         given()
                 .contentType(JSON)
-                .body(node.toString())
+                .body(registration)
                 .log().body()
                 .when()
                 .post(baseUrl)
@@ -57,7 +50,7 @@ public class RegistrationTests {
                 .log().status()
                 .log().body()
                 .statusCode(400)
-                .body("error", is("Missing password"));;
+                .body("error", is("Missing password"));
     }
 
     @Test
@@ -66,11 +59,9 @@ public class RegistrationTests {
         registration
                 .setPassword("123");
 
-        JsonNode node = mapper.valueToTree(registration);
-
         given()
                 .contentType(JSON)
-                .body(node.toString())
+                .body(registration)
                 .log().body()
                 .when()
                 .post(baseUrl)
@@ -78,7 +69,7 @@ public class RegistrationTests {
                 .log().status()
                 .log().body()
                 .statusCode(400)
-                .body("error", is("Missing email or username"));;
+                .body("error", is("Missing email or username"));
     }
 
     @Test
@@ -88,11 +79,9 @@ public class RegistrationTests {
                 .setEmail("test@test.io")
                 .setPassword("123");
 
-        JsonNode node = mapper.valueToTree(registration);
-
         given()
                 .contentType(JSON)
-                .body(node.toString())
+                .body(registration)
                 .log().body()
                 .when()
                 .post(baseUrl)
@@ -100,6 +89,6 @@ public class RegistrationTests {
                 .log().status()
                 .log().body()
                 .statusCode(400)
-                .body("error", is("Note: Only defined users succeed registration"));;
+                .body("error", is("Note: Only defined users succeed registration"));
     }
 }

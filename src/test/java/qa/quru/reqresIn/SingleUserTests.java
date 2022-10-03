@@ -6,7 +6,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
 public class SingleUserTests {
-    String baseUrl = "https://reqres.in/api/users/";
+    String baseUrl = "https://reqres.in/api/users/{userId}";
 
     @Test
     public void singleUserSuccessfulTest() {
@@ -14,7 +14,7 @@ public class SingleUserTests {
 
         given()
                 .when()
-                .get(baseUrl + userId)
+                .get(baseUrl, userId)
                 .then()
                 .log().status()
                 .log().body()
@@ -28,7 +28,7 @@ public class SingleUserTests {
 
         given()
                 .when()
-                .get(baseUrl + userId)
+                .get(baseUrl, userId)
                 .then()
                 .log().status()
                 .log().body()
@@ -41,7 +41,7 @@ public class SingleUserTests {
 
         given()
                 .when()
-                .get(baseUrl + userId)
+                .get(baseUrl,userId)
                 .then()
                 .log().status()
                 .log().body()
