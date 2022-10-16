@@ -1,6 +1,6 @@
-package qa.quru.domain;
+package qa.quru.models;
 
-public class Registration {
+public class RegistrationBodyPojoModel {
     private String email;
     private String password;
 
@@ -8,7 +8,7 @@ public class Registration {
         return email;
     }
 
-    public Registration setEmail(String email) {
+    public RegistrationBodyPojoModel setEmail(String email) {
         this.email = email;
         return this;
     }
@@ -17,7 +17,7 @@ public class Registration {
         return password;
     }
 
-    public Registration setPassword(String password) {
+    public RegistrationBodyPojoModel setPassword(String password) {
         this.password = password;
         return this;
     }

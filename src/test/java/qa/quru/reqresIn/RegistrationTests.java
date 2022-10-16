@@ -1,94 +1,93 @@
 package qa.quru.reqresIn;
 
-import qa.quru.domain.Registration;
+import qa.quru.models.ErrorResponsePojoModel;
+import qa.quru.models.RegistrationBodyPojoModel;
 
-import static io.restassured.http.ContentType.JSON;
-import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import qa.quru.models.RegistrationResponsePojoModel;
 
 import static io.restassured.RestAssured.given;
+import static qa.quru.specs.RegistrationSpecs.*;
 
 public class RegistrationTests {
-    String baseUrl = "https://reqres.in/api/register";
-
     @Test
     public void registrationSuccessfulTest() {
-        Registration registration = new Registration();
+        RegistrationBodyPojoModel registration = new RegistrationBodyPojoModel();
         registration
                 .setEmail("eve.holt@reqres.in")
                 .setPassword("123");
 
-        given()
-                .contentType(JSON)
+        RegistrationResponsePojoModel response = given()
+                .spec(registrationRequestSpec)
                 .body(registration)
-                .log().body()
                 .when()
-                .post(baseUrl)
+                .post()
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
-                .body("$", hasKey("id"))
-                .body("$", hasKey("token"));
+                .spec(registrationResponseSpec)
+                .extract()
+                .as(RegistrationResponsePojoModel.class);
+
+        assertThat(response.getToken()).isEqualTo("QpwL5tke4Pnpja7X4");
+        assertThat(response.getId()).isEqualTo(4);
     }
 
     @Test
     public void negativeMissingPasswordRegistrationTest() {
-        Registration registration = new Registration();
+        RegistrationBodyPojoModel registration = new RegistrationBodyPojoModel();
         registration
                 .setEmail("eve.holt@reqres.in");
 
-        given()
-                .contentType(JSON)
+        ErrorResponsePojoModel response = given()
+                .spec(registrationRequestSpec)
                 .body(registration)
-                .log().body()
                 .when()
-                .post(baseUrl)
+                .post()
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(400)
-                .body("error", is("Missing password"));
+                .spec(errorResponseSpec)
+                .extract()
+                .as(ErrorResponsePojoModel.class);
+
+        assertThat(response.getError()).isEqualTo("Missing password");
     }
 
     @Test
     public void negativeMissingEmailRegistrationTest() {
-        Registration registration = new Registration();
+        RegistrationBodyPojoModel registration = new RegistrationBodyPojoModel();
         registration
                 .setPassword("123");
 
-        given()
-                .contentType(JSON)
+        ErrorResponsePojoModel response = given()
+                .spec(registrationRequestSpec)
                 .body(registration)
-                .log().body()
                 .when()
-                .post(baseUrl)
+                .post()
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(400)
-                .body("error", is("Missing email or username"));
+                .spec(errorResponseSpec)
+                .extract()
+                .as(ErrorResponsePojoModel.class);
+
+        assertThat(response.getError()).isEqualTo("Missing email or username");
     }
 
     @Test
     public void negativeWrongEmailRegistrationTest() {
-        Registration registration = new Registration();
+        RegistrationBodyPojoModel registration = new RegistrationBodyPojoModel();
         registration
                 .setEmail("test@test.io")
                 .setPassword("123");
 
-        given()
-                .contentType(JSON)
+        ErrorResponsePojoModel response = given()
+                .spec(registrationRequestSpec)
                 .body(registration)
-                .log().body()
                 .when()
-                .post(baseUrl)
+                .post()
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(400)
-                .body("error", is("Note: Only defined users succeed registration"));
+                .spec(errorResponseSpec)
+                .extract()
+                .as(ErrorResponsePojoModel.class);
+
+        assertThat(response.getError()).isEqualTo("Note: Only defined users succeed registration");
     }
 }
