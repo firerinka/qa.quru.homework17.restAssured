@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'io.qameta.allure' version '2.10.0'
+    id 'io.freefair.lombok' version '6.0.0-m2'
 }
 
 group 'quru.qa'
@@ -9,6 +10,9 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 def restAssuredVersion = "5.2.0",
     allureVersion = "2.19.0",

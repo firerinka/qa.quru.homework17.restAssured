@@ -1,12 +1,12 @@
 package qa.quru.reqresIn;
 
-import qa.quru.models.ErrorResponsePojoModel;
-import qa.quru.models.RegistrationBodyPojoModel;
+import qa.quru.models.ErrorResponse;
+import qa.quru.models.RegistrationBody;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
-import qa.quru.models.RegistrationResponsePojoModel;
+import qa.quru.models.RegistrationResponse;
 
 import static io.restassured.RestAssured.given;
 import static qa.quru.specs.RegistrationSpecs.*;
@@ -14,12 +14,11 @@ import static qa.quru.specs.RegistrationSpecs.*;
 public class RegistrationTests {
     @Test
     public void registrationSuccessfulTest() {
-        RegistrationBodyPojoModel registration = new RegistrationBodyPojoModel();
-        registration
-                .setEmail("eve.holt@reqres.in")
-                .setPassword("123");
+        RegistrationBody registration = new RegistrationBody();
+        registration.setEmail("eve.holt@reqres.in");
+        registration.setPassword("123");
 
-        RegistrationResponsePojoModel response = given()
+        RegistrationResponse response = given()
                 .spec(registrationRequestSpec)
                 .body(registration)
                 .when()
@@ -27,7 +26,7 @@ public class RegistrationTests {
                 .then()
                 .spec(registrationResponseSpec)
                 .extract()
-                .as(RegistrationResponsePojoModel.class);
+                .as(RegistrationResponse.class);
 
         assertThat(response.getToken()).isEqualTo("QpwL5tke4Pnpja7X4");
         assertThat(response.getId()).isEqualTo(4);
@@ -35,11 +34,10 @@ public class RegistrationTests {
 
     @Test
     public void negativeMissingPasswordRegistrationTest() {
-        RegistrationBodyPojoModel registration = new RegistrationBodyPojoModel();
-        registration
-                .setEmail("eve.holt@reqres.in");
+        RegistrationBody registration = new RegistrationBody();
+        registration.setEmail("eve.holt@reqres.in");
 
-        ErrorResponsePojoModel response = given()
+        ErrorResponse response = given()
                 .spec(registrationRequestSpec)
                 .body(registration)
                 .when()
@@ -47,18 +45,17 @@ public class RegistrationTests {
                 .then()
                 .spec(errorResponseSpec)
                 .extract()
-                .as(ErrorResponsePojoModel.class);
+                .as(ErrorResponse.class);
 
         assertThat(response.getError()).isEqualTo("Missing password");
     }
 
     @Test
     public void negativeMissingEmailRegistrationTest() {
-        RegistrationBodyPojoModel registration = new RegistrationBodyPojoModel();
-        registration
-                .setPassword("123");
+        RegistrationBody registration = new RegistrationBody();
+        registration.setPassword("123");
 
-        ErrorResponsePojoModel response = given()
+        ErrorResponse response = given()
                 .spec(registrationRequestSpec)
                 .body(registration)
                 .when()
@@ -66,19 +63,18 @@ public class RegistrationTests {
                 .then()
                 .spec(errorResponseSpec)
                 .extract()
-                .as(ErrorResponsePojoModel.class);
+                .as(ErrorResponse.class);
 
         assertThat(response.getError()).isEqualTo("Missing email or username");
     }
 
     @Test
     public void negativeWrongEmailRegistrationTest() {
-        RegistrationBodyPojoModel registration = new RegistrationBodyPojoModel();
-        registration
-                .setEmail("test@test.io")
-                .setPassword("123");
+        RegistrationBody registration = new RegistrationBody();
+        registration.setEmail("test@test.io");
+        registration.setPassword("123");
 
-        ErrorResponsePojoModel response = given()
+        ErrorResponse response = given()
                 .spec(registrationRequestSpec)
                 .body(registration)
                 .when()
@@ -86,7 +82,7 @@ public class RegistrationTests {
                 .then()
                 .spec(errorResponseSpec)
                 .extract()
-                .as(ErrorResponsePojoModel.class);
+                .as(ErrorResponse.class);
 
         assertThat(response.getError()).isEqualTo("Note: Only defined users succeed registration");
     }

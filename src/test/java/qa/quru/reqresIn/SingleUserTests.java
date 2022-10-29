@@ -3,8 +3,8 @@ package qa.quru.reqresIn;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import qa.quru.models.SingleUserResponsePojoModel;
-import qa.quru.models.UserDataResponsePojoModel;
+import qa.quru.models.SingleUserResponse;
+import qa.quru.models.UserData;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,7 +15,7 @@ public class SingleUserTests {
     public void singleUserSuccessfulTest() {
         int userId = 2;
 
-        SingleUserResponsePojoModel response = given()
+        SingleUserResponse response = given()
                 .spec(singleUserRequestSpec)
                 .pathParam("userId", userId)
                 .when()
@@ -23,9 +23,9 @@ public class SingleUserTests {
                 .then()
                 .spec(singleUserResponseSpec)
                 .extract()
-                .as(SingleUserResponsePojoModel.class);
+                .as(SingleUserResponse.class);
 
-        UserDataResponsePojoModel userData = response.getData();
+        UserData userData = response.getData();
 
         assertThat(userData.getId()).isEqualTo(userId);
         assertThat(userData.getEmail()).isEqualTo("janet.weaver@reqres.in");
